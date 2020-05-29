@@ -312,6 +312,13 @@ create view referencias_coordinador as
 	natural join referencia natural join est_ing natural join carreras natural join libros
 	where id_carr::text = current_user;
 
+-------------------------
+--Vista: ref_ingenieria--
+-------------------------
+create view ref_ingenieria as
+	select distinct cod_a, nom_a, isbn, id_carr from insc_ing natural join asignaturas 
+	natural join referencia natural join est_ing natural join carreras
+
 ------------------------------------------------
 -- Consulta Decano: Profesores de la Facultad --
 ------------------------------------------------
@@ -382,7 +389,23 @@ create view vista_global as
 	lista_ambiental (id_p bigint,nom_p varchar,cod_e bigint,nom_e varchar,
 		cod_a bigint,nom_a varchar,grupo smallint,id_carr bigint,n1 numeric,n2 numeric,n3 numeric,
 		definitiva numeric, concepto text);
-	
+
+--------------------------------------------
+--Vista referencias: Universidad Distrital--
+--------------------------------------------
+create view ref_udistrital as
+	select * from ref_ingenieria
+	union
+	select ref_cienc.* from
+	dblink('fac_cienc',
+	'select * from ref_ciencias')
+	ref_cienc (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint)
+	union
+	select ref_medio_amb.* from
+	dblink('fac_ambiental',
+	'select * from ref_ambiental') 
+	ref_medio_amb (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint);
+
 -------------------
 --Relación presta--
 -------------------
