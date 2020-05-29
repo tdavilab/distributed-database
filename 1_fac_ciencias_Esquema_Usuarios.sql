@@ -387,6 +387,8 @@ grant select on public.lista_coordinador to coordinador;
 grant update,insert, delete on public.referencia to coordinador; ----------- CAMBIO, SE QUITÓ EL GRANT ALL
 --Concede acceso al coordinador en vista referencias_coordinador (ver las referencias sólo de su carrera)
 grant select on public.referencias_coordinador to coordinador;
+--Permiso para registrar actualizaciones en el log
+grant insert on log_notas to coordinador;
 
 -------------------
 --Rol Estudiantes--
