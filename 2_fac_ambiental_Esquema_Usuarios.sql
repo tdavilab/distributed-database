@@ -563,12 +563,88 @@ CREATE TRIGGER trigger_ingresar_referencia BEFORE INSERT
 	ON public.referencia FOR EACH ROW
 	EXECUTE PROCEDURE trigger_ingresar_referencia();
 
+--------------------------------------------------------------------------------------
+-- Función para insertar/actualizar libros desde facultades diferentes a ingeniería --
+--------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION insertar_actualizar_libro (
+	IN cod_libro bigint, IN titul varchar, IN edic int, IN edit varchar) 
+	RETURNS text AS $$
+	BEGIN
+		IF (SELECT count(isbn) FROM libros WHERE isbn = cod_libro) = 0
+			THEN
+			RETURN (
+				SELECT e.* FROM
+					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+						   'INSERT INTO libros VALUES (' || cod_libro || ',''' || titul 
+						   || ''',' || edic || ',''' || edit || ''')') e(salida text)
+			);
+			ELSE
+			RETURN (
+				SELECT e.* FROM
+					dblink('dbname=fac_ingenieria host=localhost port=5432 user=postgres password=postgres',
+						   'UPDATE libros SET titulo = ''' || titul 
+						   || ''', edicion = ' || edic || ', editorial = ''' || edit || ''' WHERE isbn = ' || cod_libro) e(salida text)
+			);
+			END IF;
+	END; $$
+	LANGUAGE plpgsql;
+	
+--select * from libros
+--select * from insertar_actualizar_libro(12345, 'abcd', 1, 'editorial pollito');
+--select * from insertar_actualizar_libro(12345, 'abcd', 1, 'editorial cebra');
 
+---------------------------------------------------------------------------------------
+-- Función para insertar/actualizar autores desde facultades diferentes a ingeniería --
+---------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION insertar_actualizar_autor (
+	IN id_aut bigint, IN nom_aut varchar, IN nac varchar) 
+	RETURNS text AS $$
+	BEGIN
+		IF (SELECT count(id_a) FROM autores WHERE id_a = id_aut) = 0
+			THEN
+			RETURN (
+				SELECT e.* FROM
+					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+						   'INSERT INTO autores VALUES (' || id_aut || ',''' || nom_aut 
+						   || ''',''' || nac || ''')') e(salida text)
+			);
+			ELSE
+			RETURN (
+				SELECT e.* FROM
+					dblink('dbname=fac_ingenieria host=localhost port=5432 user=postgres password=postgres',
+						   'UPDATE autores SET nom_autor = ''' || nom_aut 
+						   || ''', nacionalidad = ''' || nac || ''' WHERE id_a = ' || id_aut) e(salida text)
+			);
+			END IF;
+	END; $$
+	LANGUAGE plpgsql;
+	
+--select * from autores
+--select * from insertar_actualizar_autor(12345, 'juan', 'nacionalidadX');
+--select * from insertar_actualizar_autor(12345, 'pepe', 'nacionalidadX');
 
-----------------------------------------------------------------------------
--- Función para agregar ejemplar desde facultades diferentes a ingeniería --
-----------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION agregar_ejemplar (
+------------------------------------------------------------------------------
+-- Función para insertar "escribe" desde facultades diferentes a ingeniería --
+------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION insertar_escribe (
+	IN id_aut bigint, IN cod_libro bigint) 
+	RETURNS text AS $$
+	BEGIN
+		RETURN (
+			SELECT e.* FROM
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+					   'INSERT INTO escribe VALUES (' || id_aut || ',' || cod_libro || ')') e(salida text)
+		);
+	END; $$
+	LANGUAGE plpgsql;
+	
+--select * from escribe
+--select * from insertar_escribe(12345, 100100900);
+
+-----------------------------------------------------------------------------
+-- Función para insertar ejemplar desde facultades diferentes a ingeniería --
+-----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION insertar_ejemplar (
 	IN i_num_ej bigint, IN cod_libro bigint) 
 	RETURNS text AS $$
 	BEGIN
@@ -581,7 +657,7 @@ CREATE OR REPLACE FUNCTION agregar_ejemplar (
 	LANGUAGE plpgsql;
 
 -- PRUEBA:
---select * from agregar_ejemplar(3,100101601)
+--select * from insertar_ejemplar(3,100101601)
 
 --------------------------------------------------------------------------
 -- Función para borrar libros desde facultades diferentes a ingeniería --
@@ -742,29 +818,25 @@ create trigger actual_notas_log after update
 grant execute on function registrar_prestamo(bigint, int, bigint, varchar) to bibliotecario;
 grant execute on function registrar_devolucion(bigint, int, bigint, varchar, varchar) to bibliotecario;
 
-grant execute on function agregar_libro(bigint,varchar,int,varchar) to bibliotecario;
-grant execute on function agregar_autor(bigint,varchar,varchar) to bibliotecario;
-grant execute on function agregar_escribe(bigint, bigint) to bibliotecario;
+grant execute on function insertar_actualizar_libro(bigint,varchar,int,varchar) to bibliotecario;
+grant execute on function insertar_actualizar_autor(bigint,varchar,varchar) to bibliotecario;
 
-grant execute on function agregar_ejemplar(bigint, bigint) to bibliotecario;
+grant execute on function insertar_escribe(bigint, bigint) to bibliotecario;
+grant execute on function insertar_ejemplar(bigint, bigint) to bibliotecario;;
 
 grant execute on function borrar_libro(bigint) to bibliotecario;
 grant execute on function borrar_autor(bigint) to bibliotecario;
 grant execute on function borrar_escribe(bigint, bigint) to bibliotecario;
 grant execute on function borrar_ejemplar(bigint, bigint) to bibliotecario;
 
-grant execute on function actualizar_libro(bigint) to bibliotecario;
-grant execute on function actualizar_autor(bigint) to bibliotecario;
 
 -----------------
 -- COORDINADOR --
 -----------------
-grant execute on function agregar_libro(bigint,varchar,int,varchar) to coordinador;
-grant execute on function agregar_autor(bigint,varchar,varchar) to coordinador;
-grant execute on function agregar_escribe(bigint, bigint) to coordinador;
+grant execute on function insertar_actualizar_libro(bigint,varchar,int,varchar) to coordinador;
+grant execute on function insertar_actualizar_autor(bigint,varchar,varchar) to coordinador;
 
-grant execute on function actualizar_libro(bigint) to bibliotecario;
-grant execute on function actualizar_autor(bigint) to bibliotecario;
+grant execute on function insertar_escribe(bigint, bigint) to coordinador;
 
 
 -------------------------------------------------------------------------
