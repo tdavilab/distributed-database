@@ -285,6 +285,15 @@ create view escribe as
 	dblink('dbname=fac_ingenieria host=localhost port=5432 user=postgres password=postgres',
 		'select * from public.escribe') e (id_a bigint, isbn bigint);
 
+---------------------------------------------------------
+-- Vista para obtener los prestamos para bibliotecario --
+---------------------------------------------------------
+create view prestamos_bib as
+	select e.* from
+	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+		'select * from public.prestamos_estudiante_remoto')
+		e (cod_e bigint, isbn bigint, titulo varchar, num_ej integer, fecha_p date, fecha_d date);
+
 -----------------------------------------------------
 -- Vista para obtener los prestamos del estudiante --
 -----------------------------------------------------
@@ -413,6 +422,8 @@ grant select on libros to bibliotecario;
 grant select on autores to bibliotecario;
 --Concede acceso al estudiante en vista/tabla escribe
 grant select on escribe to bibliotecario;
+--Consultar todos los prestamos
+grant select on prestamos_bib to bibliotecario;
 
 -----------------------------------------------
 -- Trigger para crear roles de coordinadores --

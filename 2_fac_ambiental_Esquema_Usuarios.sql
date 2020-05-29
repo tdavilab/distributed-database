@@ -413,6 +413,8 @@ grant select on libros to bibliotecario;
 grant select on autores to bibliotecario;
 --Concede acceso al estudiante en vista/tabla escribe
 grant select on escribe to bibliotecario;
+--Consultar todos los prestamos
+grant select on prestamos_bib to bibliotecario;
 
 -----------------------------------------------
 -- Trigger para crear roles de coordinadores --
