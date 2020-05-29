@@ -348,12 +348,6 @@ SELECT * FROM crear_roles_genericos();
 ------------------
 --Rol Profesores--
 ------------------
---Politica de acceso profesores (consulta)
-CREATE POLICY info_profes_sel ON profesores FOR SELECT TO profesor USING (id_p::varchar = CURRENT_USER);
---Politica de acceso profesores (actualiza)
-CREATE POLICY info_profes_upd ON profesores FOR UPDATE TO profesor USING (id_p::varchar = CURRENT_USER);
---Habilito el RLS
-ALTER TABLE profesores ENABLE ROW LEVEL SECURITY;
 --Concede acceso al profesor en vista/tabla libros
 grant select on libros to profesor;
 --Concede acceso al profesor en vista/tabla autores
@@ -362,6 +356,15 @@ grant select on autores to profesor;
 grant select on escribe to profesor;
 --Concede acceso al profesor en vista escribe
 grant select on lista_clases_ciencias to profesor;
+--Permiso para registrar actualizaciones en el log
+grant insert on log_notas to profesor;
+--Consultar datos del profesor
+grant select on info_profes to profesor;
+--Consultar y actualizar su informacion personal
+grant update (dir_p, tel_p) on profesores to profesor;
+--Politica de acceso profesores (actualiza)
+create policy info_profes_upd on profesores for update to profesor using (id_p::varchar = current_user);
+alter table profesores enable row level security;
 
 -------------------
 --Rol Coordinador--
