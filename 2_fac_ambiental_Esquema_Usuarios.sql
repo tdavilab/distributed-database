@@ -404,11 +404,6 @@ grant select on libros to bibliotecario;
 grant select on autores to bibliotecario;
 --Concede acceso al estudiante en vista/tabla escribe
 grant select on escribe to bibliotecario;
---INGENIERIA: grant select on ejemplares to bibliotecario;
---INGENIERIA: grant select on presta to bibliotecario;
---INGENIERIA: grant insert on autores to bibliotecario;
---INGENIERIA: grant insert on escribe to bibliotecario;
---INGENIERIA: grant insert on escribe to bibliotecario;
 
 -----------------------------------------------
 -- Trigger para crear roles de coordinadores --
