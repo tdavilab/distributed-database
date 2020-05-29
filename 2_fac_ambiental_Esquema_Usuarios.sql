@@ -366,11 +366,6 @@ grant select on libros to coordinador;
 grant select on autores to coordinador;
 --Concede acceso al coordinador en vista/tabla escribe
 grant select on escribe to coordinador;
-
---INGENIERIA: grant insert on autores to coordinador;
---INGENIERIA: grant insert on escribe to coordinador;
---INGENIERIA: grant insert on escribe to coordinador;
-
 --Concede acceso al coordinador en tabla imparte
 grant insert, update, delete,select on public.imparte to coordinador;
 --Concede acceso al coordinador en vista estudiantes_ambiental
@@ -385,7 +380,6 @@ grant update,insert, delete,select on public.referencia to coordinador; --------
 grant select on public.referencias_coordinador to coordinador;
 --Permiso para registrar actualizaciones en el log
 grant insert on log_notas to coordinador;
-
 
 -------------------
 --Rol Estudiantes--
