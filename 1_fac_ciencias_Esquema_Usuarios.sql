@@ -249,6 +249,13 @@ create view referencias_coordinador as
 	natural join referencia natural join estudiantes_ciencias natural join carreras
 	where id_carr::text = (select current_user);
 
+-----------------------
+--Vista: ref_ciencias--
+-----------------------
+create view ref_ciencias as
+	select distinct cod_a, nom_a, isbn, id_carr from inscribe_ciencias natural join asignaturas 
+	natural join referencia natural join estudiantes_ciencias natural join carreras
+
 ------------------------------------------------
 -- Consulta Decano: Profesores de la Facultad --
 ------------------------------------------------
