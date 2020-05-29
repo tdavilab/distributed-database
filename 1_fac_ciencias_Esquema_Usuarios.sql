@@ -174,6 +174,12 @@ DROP FUNCTION crear_inscribe(esquema varchar);
 ---------------------------------------------------------------
 -- CREACIÓN DE VISTAS DE LA FACULTAD DE CIENCIAS Y EDUCACIÓN --
 ---------------------------------------------------------------
+--------------------------------
+--Vista informacion profesores--
+--------------------------------
+create view info_profes as
+	select * from profesores
+	where id_p::varchar = current_user;
 
 -----------------------
 -- Vista Estudiantes --
