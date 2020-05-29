@@ -286,7 +286,7 @@ create view escribe as
 create view prestamos_estudiante as
 	select e.* from
 	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
-		'select * from public.prestamos_estudiante')
+		'select * from public.prestamos_estudiante_remoto')
 		e (cod_e bigint, isbn bigint, titulo varchar, num_ej integer, fecha_p date, fecha_d date);
 	where cod_e::text=(select current_user);
 
