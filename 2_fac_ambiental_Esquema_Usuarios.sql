@@ -173,6 +173,12 @@ SELECT * FROM crear_inscribe('ing_topografica');
 ---------------------------------------------------------
 -- CREACIÓN DE VISTAS DE LA FACULTAD DE MEDIO AMBIENTE --
 ---------------------------------------------------------
+--------------------------------
+--Vista informacion profesores--
+--------------------------------
+create view info_profes as
+	select * from profesores
+	where id_p::varchar = current_user;
 
 -----------------------
 -- Vista Estudiantes --
