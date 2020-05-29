@@ -503,8 +503,12 @@ grant all on escribe to bibliotecario;
 -------------------
 --Administra info de las asignaturas que imparten los profesores y los grupos
 grant all on imparte to coordinador;
+--Consultar vista de estudiantes de la facultad
+grant select on est_ing to coordinador;
+--Consultar vista de inscipciones de la facultad
+grant select on insc_ing to coordinador;
 --Administra info de referencias
-grant insert,delete,update on referencia to coordinador;
+grant all on referencia to coordinador;
 --Ingresa libros y autores
 grant insert,delete,update on libros to coordinador;
 grant insert,delete,update on autores to coordinador;
