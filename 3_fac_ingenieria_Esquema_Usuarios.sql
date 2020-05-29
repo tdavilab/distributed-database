@@ -508,7 +508,7 @@ grant select on est_ing to coordinador;
 --Consultar vista de inscipciones de la facultad
 grant select on insc_ing to coordinador;
 --Administra info de referencias
-grant all on referencia to coordinador;
+grant update,insert,delete on referencia to coordinador;
 --Ingresa libros y autores
 grant insert,delete,update on libros to coordinador;
 grant insert,delete,update on autores to coordinador;

@@ -375,8 +375,6 @@ grant select on libros to coordinador;
 grant select on autores to coordinador;
 --Concede acceso al coordinador en vista/tabla escribe
 grant select on escribe to coordinador;
-
-
 --Concede acceso al coordinador en tabla imparte
 grant insert, update, delete on public.imparte to coordinador;
 --Concede acceso al coordinador en vista estudiantes_ambiental
