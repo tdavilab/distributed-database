@@ -375,7 +375,7 @@ grant select on public.inscribe_ambiental to coordinador;
 --Concede acceso al coordinador en vista lista_coordinador
 grant select on public.lista_coordinador to coordinador;
 --Concede acceso al coordinador en tabla referencia (puede actualizar, insertar y borrar, pero sólo las de su carrera. Esto es controlado con triggers)
-grant update,insert, delete,select on public.referencia to coordinador; ----------- CAMBIO, SE QUITÓ EL GRANT ALL
+grant update,insert,delete on public.referencia to coordinador; ----------- CAMBIO, SE QUITÓ EL GRANT ALL
 --Concede acceso al coordinador en vista referencias_coordinador (ver las referencias sólo de su carrera)
 grant select on public.referencias_coordinador to coordinador;
 --Permiso para registrar actualizaciones en el log
