@@ -126,7 +126,7 @@ create table log_notas(
     cod_e integer not null,
     id_p bigint not null,
     cod_a bigint not null,
-    grupo bigint not null,
+    grupo smallint not null,
     n1_old numeric,
     n2_old numeric,
     n3_old numeric,
