@@ -248,7 +248,11 @@ create view referencias_coordinador as
 ------------------------------------------------
 -- Para que el decano pueda ver la lista de los profesores de la facultad
 create view lista_profesores as
-	select id_p, nom_p, cod_a, nom_a, grupo, id_carr, cod_e, nom_e, n1, n2, n3
+	select id_p, nom_p, cod_e, nom_e, cod_a, nom_a, grupo, id_carr, n1::numeric(2,1), n2::numeric(2,1), n3::numeric(2,1), 
+			(coalesce(n1,0)*0.35 + coalesce(n2,0)*0.35 + coalesce(n3,0)*0.3)::numeric(2,1) definitiva, 
+	case coalesce(n1,0)*0.35 + coalesce(n2,0)*0.35 + coalesce(n3,0)*0.3 >= 3.0
+		when true then 'aprobado' else 'reprobado'
+	end as concepto 
 	from profesores natural join inscribe_ciencias natural join estudiantes_ciencias natural join asignaturas;
 
 ----------------------------------------------------------------
