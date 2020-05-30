@@ -1,4 +1,4 @@
-﻿/*
+/*
 MCIC-BD-PROYECTO FINAL
 Christopher Giovanny Ortiz Montero		Código: 20201495006
 Joaquín Eduardo Caicedo Navarro			Código: 20201495001
@@ -124,9 +124,9 @@ create table presta(
 	cod_e bigint,
 	num_ej int,
 	isbn bigint,
-	fecha_p date not null check (fecha_p between '1900-01-01' and now()),
-	fecha_d date null check (fecha_d >= fecha_p),
-	primary key (cod_e, isbn, num_ej, fecha_p),
+	fech_p date not null check (fech_p between '1900-01-01' and now()),
+	fech_d date null check (fech_d >= fech_p),
+	primary key (cod_e, isbn, num_ej, fech_p),
 	foreign key (num_ej, isbn) references ejemplares (num_ej, isbn)
 );
 
@@ -344,13 +344,6 @@ create view lista_profesores as
 		when true then 'aprobado' else 'reprobado'
 	end as concepto 
 	from insc_ing natural join est_ing natural join asignaturas natural join profesores;
-
---Conexion a bases de datos de otras facultades
---select dblink_connect('fac_cienc','dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres');
---select dblink_connect('fac_ambiental','dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres');
-
---select dblink_connect('fac_cienc','dbname=fac_ciencias port=5432 user=postgres password=supersecret');
---select dblink_connect('fac_ambiental','dbname=fac_ambiental port=5432 user=postgres password=supersecret');
 	
 --------------------------------------------
 --Vista estudiantes: Universidad Distrital--
@@ -359,12 +352,12 @@ create view est_udistrital as
 	select * from est_ing
 	union
 	select est_cienc.* from
-	dblink('fac_cienc',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
 	'select * from estudiantes_ciencias')
 	est_cienc (cod_e bigint,nom_e varchar,dir_e varchar,tel_est bigint,fech_nac date,id_carr bigint)
 	union
 	select est_medio_amb.* from
-	dblink('fac_ambiental',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
 	'select * from estudiantes_ambiental') 
 	est_medio_amb (cod_e bigint,nom_e varchar,dir_e varchar,tel_est bigint,fech_nac date,id_carr bigint);
 
@@ -375,12 +368,12 @@ create view insc_udistrital as
 	select * from insc_ing
 	union
 	select est_cienc.* from
-	dblink('fac_cienc',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
 	'select * from inscribe_ciencias')
 	est_cienc (cod_e bigint,id_p bigint,cod_a bigint,grupo smallint,n1 numeric,n2 numeric,n3 numeric)
 	union
 	select est_medio_amb.* from
-	dblink('fac_ambiental',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
 	'select * from inscribe_ambiental') 
 	est_medio_amb (cod_e bigint,id_p bigint,cod_a bigint,grupo smallint,n1 numeric,n2 numeric,n3 numeric);
 
@@ -391,14 +384,14 @@ create view vista_global as
 	select * from lista_profesores
 	union
 	select lista_cienc.* from
-	dblink('fac_cienc',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
 	'select * from lista_profesores')
 	lista_cienc (id_p bigint,nom_p varchar,cod_e bigint,nom_e varchar,
 		cod_a bigint,nom_a varchar,grupo smallint,id_carr bigint,n1 numeric,n2 numeric,n3 numeric,
 		definitiva numeric, concepto text)
 	union
 	select lista_ambiental.* from
-	dblink('fac_ambiental',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
 	'select * from lista_profesores')
 	lista_ambiental (id_p bigint,nom_p varchar,cod_e bigint,nom_e varchar,
 		cod_a bigint,nom_a varchar,grupo smallint,id_carr bigint,n1 numeric,n2 numeric,n3 numeric,
@@ -411,12 +404,12 @@ create view ref_udistrital as
 	select * from ref_ingenieria
 	union
 	select ref_cienc.* from
-	dblink('fac_cienc',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
 	'select * from ref_ciencias')
 	ref_cienc (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint)
 	union
 	select ref_medio_amb.* from
-	dblink('fac_ambiental',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
 	'select * from ref_ambiental') 
 	ref_medio_amb (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint);
 
