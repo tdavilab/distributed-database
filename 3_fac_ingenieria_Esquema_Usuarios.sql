@@ -116,6 +116,20 @@ create table ejemplares(
 	isbn bigint references libros (isbn),
 	primary key (num_ej, isbn)
 );
+
+-------------------
+--Relación presta--
+-------------------
+create table presta(
+	cod_e bigint,
+	num_ej int,
+	isbn bigint,
+	fecha_p date not null check (fecha_p between '1900-01-01' and now()),
+	fecha_d date null check (fecha_d >= fecha_p),
+	primary key (cod_e, isbn, num_ej, fecha_p),
+	foreign key (num_ej, isbn) references ejemplares (num_ej, isbn)
+);
+
 --------------------
 --Tabla: log_notas--
 --------------------
@@ -405,19 +419,6 @@ create view ref_udistrital as
 	dblink('fac_ambiental',
 	'select * from ref_ambiental') 
 	ref_medio_amb (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint);
-
--------------------
---Relación presta--
--------------------
-create table presta(
-	cod_e bigint,
-	isbn bigint,
-	num_ej int,
-	fecha_p date not null check (fecha_p between '1900-01-01' and now()),
-	fecha_d date null check (fecha_d >= fecha_p),
-	primary key (cod_e, isbn, num_ej, fecha_p),
-	foreign key (isbn, num_ej) references ejemplares (isbn, num_ej)
-);
 
 ------------------------------------------
 --Vista prestamos: Universidad Distrital--
