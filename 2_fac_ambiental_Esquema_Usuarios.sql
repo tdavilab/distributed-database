@@ -18,7 +18,7 @@ CREATE SCHEMA ing_topografica;
 CREATE EXTENSION dblink;
 
 -- DBLINK INGENIERIA
---SELECT dblink_connect('fac_ingenieria','dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret');
+--SELECT dblink_connect('fac_ingenieria','dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret');
 
 ---------------------------------------------------------
 -- CREACIÓN DE TABLAS DE LA FACULTAD DE MEDIO AMBIENTE --
@@ -268,7 +268,7 @@ create view lista_profesores as
 ----------------------------------------------------------------
 create view libros as
 	select e.* from
-	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 		'select * from public.libros') e (isbn bigint, titulo varchar, edicion smallint, editorial varchar);
 
 -----------------------------------------------------------------
@@ -276,7 +276,7 @@ create view libros as
 -----------------------------------------------------------------
 create view autores as
 	select e.* from
-	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 		'select * from public.autores') e (id_a bigint, nom_autor varchar, nacionalidad varchar);
 
 ----------------------------------------------------------------------
@@ -284,7 +284,7 @@ create view autores as
 ----------------------------------------------------------------------
 create view escribe as
 	select e.* from
-	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 		'select * from public.escribe') e (id_a bigint, isbn bigint);
 
 ---------------------------------------------------------
@@ -292,7 +292,7 @@ create view escribe as
 ---------------------------------------------------------
 create view prestamos_bib as
 	select e.* from
-	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 		'select * from public.prestamos_estudiante_remoto')
 		e (cod_e bigint, isbn bigint, titulo varchar, num_ej integer, fecha_p date, fecha_d date);
 
@@ -301,7 +301,7 @@ create view prestamos_bib as
 -----------------------------------------------------
 create view prestamos_estudiante as
 	select e.* from
-	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 		'select * from public.prestamos_estudiante_remoto')
 		e (cod_e bigint, isbn bigint, titulo varchar, num_ej integer, fecha_p date, fecha_d date)
 	where cod_e::text=(select current_user);
@@ -351,6 +351,7 @@ BEGIN
 END;
 $crear_roles_genericos$ LANGUAGE plpgsql;
 
+select * from crear_roles_genericos();
 -----------------------
 --Politicas de acceso--
 -----------------------
@@ -517,7 +518,7 @@ CREATE OR REPLACE FUNCTION registrar_prestamo (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'INSERT INTO presta VALUES (' || codigo || ',' || ejemplar || ',' 
 					   || cod_libro || ',''' || fecha_p || ''', NULL)') e(salida text)
 		);
@@ -533,7 +534,7 @@ CREATE OR REPLACE FUNCTION registrar_devolucion (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-			dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+			dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 				   'UPDATE presta SET fech_d = ''' || fecha_d || 
 				   ''' WHERE cod_e = ' || codigo || ' AND num_ej = ' || ejemplar || ' AND isbn = ' ||
 				   cod_libro || ' AND fech_p = ''' || fecha_p || '''')  e(salida text)
@@ -574,14 +575,14 @@ CREATE OR REPLACE FUNCTION insertar_actualizar_libro (
 			THEN
 			RETURN (
 				SELECT e.* FROM
-					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 						   'INSERT INTO libros VALUES (' || cod_libro || ',''' || titul 
 						   || ''',' || edic || ',''' || edit || ''')') e(salida text)
 			);
 			ELSE
 			RETURN (
 				SELECT e.* FROM
-					dblink('dbname=fac_ingenieria host=localhost port=5432 user=postgres password=postgres',
+					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 						   'UPDATE libros SET titulo = ''' || titul 
 						   || ''', edicion = ' || edic || ', editorial = ''' || edit || ''' WHERE isbn = ' || cod_libro) e(salida text)
 			);
@@ -604,14 +605,14 @@ CREATE OR REPLACE FUNCTION insertar_actualizar_autor (
 			THEN
 			RETURN (
 				SELECT e.* FROM
-					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 						   'INSERT INTO autores VALUES (' || id_aut || ',''' || nom_aut 
 						   || ''',''' || nac || ''')') e(salida text)
 			);
 			ELSE
 			RETURN (
 				SELECT e.* FROM
-					dblink('dbname=fac_ingenieria host=localhost port=5432 user=postgres password=postgres',
+					dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 						   'UPDATE autores SET nom_autor = ''' || nom_aut 
 						   || ''', nacionalidad = ''' || nac || ''' WHERE id_a = ' || id_aut) e(salida text)
 			);
@@ -632,7 +633,7 @@ CREATE OR REPLACE FUNCTION insertar_escribe (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'INSERT INTO escribe VALUES (' || id_aut || ',' || cod_libro || ')') e(salida text)
 		);
 	END; $$
@@ -650,7 +651,7 @@ CREATE OR REPLACE FUNCTION insertar_ejemplar (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'INSERT INTO ejemplares (num_ej, isbn) VALUES (' || i_num_ej || ',' || cod_libro || ')') e(salida text)
 		);
 	END; $$
@@ -668,7 +669,7 @@ CREATE OR REPLACE FUNCTION borrar_libro (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'DELETE FROM libros WHERE isbn='||cod_libro) e(salida text)
 		);
 	END; $$
@@ -686,7 +687,7 @@ CREATE OR REPLACE FUNCTION borrar_autor (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'DELETE FROM autores WHERE id_a='||id_aut) e(salida text)
 		);
 	END; $$
@@ -704,7 +705,7 @@ CREATE OR REPLACE FUNCTION borrar_escribe (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'DELETE FROM escribe WHERE isbn='||cod_libro||'AND id_a='||id_aut) e(salida text)
 		);
 	END; $$
@@ -722,7 +723,7 @@ CREATE OR REPLACE FUNCTION borrar_ejemplar (
 	BEGIN
 		RETURN (
 			SELECT e.* FROM
-				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
+				dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=15544 user=postgres password=supersecret',
 					   'DELETE FROM ejemplares WHERE isbn='||cod_libro||'AND num_ej='||i_num_ej) e(salida text)
 		);
 	END; $$
