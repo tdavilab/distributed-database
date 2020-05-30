@@ -352,12 +352,12 @@ create view est_udistrital as
 	select * from est_ing
 	union
 	select est_cienc.* from
-	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 11148 user=postgres password=postgres',
 	'select * from estudiantes_ciencias')
 	est_cienc (cod_e bigint,nom_e varchar,dir_e varchar,tel_est bigint,fech_nac date,id_carr bigint)
 	union
 	select est_medio_amb.* from
-	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 11575 user=postgres password=postgres',
 	'select * from estudiantes_ambiental') 
 	est_medio_amb (cod_e bigint,nom_e varchar,dir_e varchar,tel_est bigint,fech_nac date,id_carr bigint);
 
@@ -368,12 +368,12 @@ create view insc_udistrital as
 	select * from insc_ing
 	union
 	select est_cienc.* from
-	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 11148 user=postgres password=postgres',
 	'select * from inscribe_ciencias')
 	est_cienc (cod_e bigint,id_p bigint,cod_a bigint,grupo smallint,n1 numeric,n2 numeric,n3 numeric)
 	union
 	select est_medio_amb.* from
-	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 11575 user=postgres password=postgres',
 	'select * from inscribe_ambiental') 
 	est_medio_amb (cod_e bigint,id_p bigint,cod_a bigint,grupo smallint,n1 numeric,n2 numeric,n3 numeric);
 
@@ -384,14 +384,14 @@ create view vista_global as
 	select * from lista_profesores
 	union
 	select lista_cienc.* from
-	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 11148 user=postgres password=postgres',
 	'select * from lista_profesores')
 	lista_cienc (id_p bigint,nom_p varchar,cod_e bigint,nom_e varchar,
 		cod_a bigint,nom_a varchar,grupo smallint,id_carr bigint,n1 numeric,n2 numeric,n3 numeric,
 		definitiva numeric, concepto text)
 	union
 	select lista_ambiental.* from
-	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 11575 user=postgres password=postgres',
 	'select * from lista_profesores')
 	lista_ambiental (id_p bigint,nom_p varchar,cod_e bigint,nom_e varchar,
 		cod_a bigint,nom_a varchar,grupo smallint,id_carr bigint,n1 numeric,n2 numeric,n3 numeric,
@@ -404,12 +404,12 @@ create view ref_udistrital as
 	select * from ref_ingenieria
 	union
 	select ref_cienc.* from
-	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres',
+	dblink('dbname=fac_ciencias host= 0.tcp.ngrok.io port= 11148 user=postgres password=postgres',
 	'select * from ref_ciencias')
 	ref_cienc (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint)
 	union
 	select ref_medio_amb.* from
-	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres',
+	dblink('dbname=fac_ambiental host = 0.tcp.ngrok.io port= 11575 user=postgres password=postgres',
 	'select * from ref_ambiental') 
 	ref_medio_amb (cod_a bigint,nom_a varchar,isbn bigint,id_carr bigint);
 
