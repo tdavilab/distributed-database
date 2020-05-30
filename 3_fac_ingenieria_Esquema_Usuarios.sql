@@ -1,4 +1,4 @@
-/*
+﻿/*
 MCIC-BD-PROYECTO FINAL
 Christopher Giovanny Ortiz Montero		Código: 20201495006
 Joaquín Eduardo Caicedo Navarro			Código: 20201495001
@@ -317,7 +317,7 @@ create view referencias_coordinador as
 -------------------------
 create view ref_ingenieria as
 	select distinct cod_a, nom_a, isbn, id_carr from insc_ing natural join asignaturas 
-	natural join referencia natural join est_ing natural join carreras
+	natural join referencia natural join est_ing natural join carreras;
 
 ------------------------------------------------
 -- Consulta Decano: Profesores de la Facultad --
@@ -335,8 +335,8 @@ create view lista_profesores as
 --select dblink_connect('fac_cienc','dbname=fac_ciencias host= 0.tcp.ngrok.io port= 19670 user=postgres password=postgres');
 --select dblink_connect('fac_ambiental','dbname=fac_ambiental host = 0.tcp.ngrok.io port= 10338 user=postgres password=postgres');
 
-select dblink_connect('fac_cienc','dbname=fac_ciencias port=5432 user=postgres password=supersecret');
-select dblink_connect('fac_ambiental','dbname=fac_ambiental port=5432 user=postgres password=supersecret');
+--select dblink_connect('fac_cienc','dbname=fac_ciencias port=5432 user=postgres password=supersecret');
+--select dblink_connect('fac_ambiental','dbname=fac_ambiental port=5432 user=postgres password=supersecret');
 	
 --------------------------------------------
 --Vista estudiantes: Universidad Distrital--

@@ -1,4 +1,4 @@
--- MCIC-BD-PROYECTO FINAL
+﻿-- MCIC-BD-PROYECTO FINAL
 
 -- Christopher Giovanny Ortiz Montero 	Código: 20201495006
 -- Joaquín Eduardo Caicedo Navarro		Código: 20201495001
@@ -18,7 +18,7 @@ CREATE SCHEMA ing_topografica;
 CREATE EXTENSION dblink;
 
 -- DBLINK INGENIERIA
-SELECT dblink_connect('fac_ingenieria','dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret');
+--SELECT dblink_connect('fac_ingenieria','dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret');
 
 ---------------------------------------------------------
 -- CREACIÓN DE TABLAS DE LA FACULTAD DE MEDIO AMBIENTE --
@@ -240,7 +240,7 @@ create view lista_coordinador as
 ------------------------
 create view ref_ambiental as
 	select distinct cod_a, nom_a, isbn, id_carr from inscribe_ambiental natural join asignaturas 
-	natural join referencia natural join estudiantes_ambiental natural join carreras
+	natural join referencia natural join estudiantes_ambiental natural join carreras;
 
 -----------------------------------------------------
 -- Consulta Coordinador: Referencias de la Carrera --
@@ -303,7 +303,7 @@ create view prestamos_estudiante as
 	select e.* from
 	dblink('dbname=fac_ingenieria host=0.tcp.ngrok.io port=10012 user=postgres password=supersecret',
 		'select * from public.prestamos_estudiante_remoto')
-		e (cod_e bigint, isbn bigint, titulo varchar, num_ej integer, fecha_p date, fecha_d date);
+		e (cod_e bigint, isbn bigint, titulo varchar, num_ej integer, fecha_p date, fecha_d date)
 	where cod_e::text=(select current_user);
 
 -----------------------------------------------------------------------------
@@ -811,6 +811,24 @@ create trigger actual_notas_log after update
 -- PRIVILEGIOS EN PROCEDIMIENTOS ALMACENADOS --
 -----------------------------------------------
 
+--------------------------------------------------------
+-- REVOCA PERMISO DE EJECUCIÓN DE FUNCIONES EN PUBLIC --
+--------------------------------------------------------
+
+REVOKE EXECUTE ON FUNCTION registrar_prestamo(bigint, int, bigint, varchar) FROM public;
+REVOKE EXECUTE ON FUNCTION registrar_devolucion(bigint, int, bigint, varchar, varchar) FROM public;
+
+REVOKE EXECUTE ON FUNCTION borrar_libro(bigint) FROM public;
+REVOKE EXECUTE ON FUNCTION borrar_autor(bigint) FROM public;
+REVOKE EXECUTE ON FUNCTION borrar_escribe(bigint, bigint) FROM public;
+REVOKE EXECUTE ON FUNCTION borrar_ejemplar(bigint, bigint) FROM public;
+
+REVOKE EXECUTE ON FUNCTION insertar_actualizar_libro(bigint,varchar,int,varchar) FROM public;
+REVOKE EXECUTE ON FUNCTION insertar_actualizar_autor(bigint,varchar,varchar) FROM public;
+
+REVOKE EXECUTE ON FUNCTION insertar_escribe(bigint, bigint)  FROM public;
+REVOKE EXECUTE ON FUNCTION insertar_ejemplar(bigint, bigint) FROM public;
+
 -------------------
 -- BIBLIOTECARIO --
 -------------------
@@ -837,6 +855,7 @@ grant execute on function insertar_actualizar_libro(bigint,varchar,int,varchar) 
 grant execute on function insertar_actualizar_autor(bigint,varchar,varchar) to coordinador;
 
 grant execute on function insertar_escribe(bigint, bigint) to coordinador;
+
 
 
 -------------------------------------------------------------------------
