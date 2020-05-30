@@ -229,7 +229,7 @@ create view notas_ciencias as
 create view lista_clases_ciencias as
 	select id_p, nom_p, cod_a, nom_a, grupo, id_carr, cod_e, nom_e, n1, n2, n3
 	from profesores natural join inscribe_ciencias natural join estudiantes_ciencias natural join asignaturas
-	where id_p::text = (select current_user) ;
+	where id_p::text = (select current_user);
 
 ----------------------------------------------------
 -- Consulta Coordinador: Profesores de la Carrera --
@@ -238,7 +238,7 @@ create view lista_clases_ciencias as
 create view lista_coordinador as
 	select id_p, nom_p, cod_a, nom_a, grupo, id_carr, cod_e, nom_e, n1, n2, n3
 	from profesores natural join inscribe_ciencias natural join estudiantes_ciencias natural join asignaturas
-	where id_carr = (select current_user);
+	where id_carr::text = (select current_user);
 
 -----------------------------------------------------
 -- Consulta Coordinador: Referencias de la Carrera --
@@ -254,7 +254,7 @@ create view referencias_coordinador as
 -----------------------
 create view ref_ciencias as
 	select distinct cod_a, nom_a, isbn, id_carr from inscribe_ciencias natural join asignaturas 
-	natural join referencia natural join estudiantes_ciencias natural join carreras
+	natural join referencia natural join estudiantes_ciencias natural join carreras;
 
 ------------------------------------------------
 -- Consulta Decano: Profesores de la Facultad --
