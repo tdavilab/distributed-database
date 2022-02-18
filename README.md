@@ -1,4 +1,4 @@
-# Distributed Database
+# Prototype of a Distributed Database of an Academic Management System
 
 
 Distributed database schema to manage academic information of a university, where the information of each faculty is stored in a different geographical location. Information is also distributed locally for each career of the faculty.
